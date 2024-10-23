@@ -4,6 +4,7 @@ from scrapy_selenium import SeleniumRequest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from datetime import datetime
 
 
 class FlightsSpider(scrapy.Spider):
@@ -15,9 +16,6 @@ class FlightsSpider(scrapy.Spider):
     ]
 
     def start_requests(self):
-        # for url in self.start_urls:
-        #     yield SeleniumRequest(url=url, callback=self.parse)
-        # Start with the first URL
         yield SeleniumRequest(
             url=self.start_urls[0], callback=self.parse, meta={"index": 0}
         )
@@ -38,8 +36,6 @@ class FlightsSpider(scrapy.Spider):
         #  Click the button
         more_flights_button.click()
 
-        # Scroll down to the bottom of the page using JavaScript execution
-        # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(10)
 
         # Get the new HTML content from the driver
@@ -52,6 +48,9 @@ class FlightsSpider(scrapy.Spider):
 
         # Extract flight details from the response content
         flight_options = new_response.xpath('//li[@class="pIav2d"]')
+
+        # Get the current date and time
+        current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         for item in flight_options:
             duration = item.xpath(
@@ -80,6 +79,7 @@ class FlightsSpider(scrapy.Spider):
                 "departure_landing": departure_landing,
                 "stopping_locations": stopping_locations,
                 "company": company,
+                "scraped_at": current_date,
             }
 
         # After finishing processing the first URL, check if there's another URL
