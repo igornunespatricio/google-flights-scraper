@@ -95,3 +95,7 @@ COOKIES_ENABLED = True
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+DOWNLOADER_MIDDLEWARES = {"scrapy_selenium.SeleniumMiddleware": 800}  # Priority of 800
+SELENIUM_DRIVER_ARGUMENTS = []  # ["--headless=new"]
+SELENIUM_DRIVER_NAME = "chrome"
