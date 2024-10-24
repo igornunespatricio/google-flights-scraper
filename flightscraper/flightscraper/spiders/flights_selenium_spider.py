@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
+from database import DBHandler
 
 
 class FlightsSpider(scrapy.Spider):
@@ -14,6 +15,11 @@ class FlightsSpider(scrapy.Spider):
         "https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI1LTA4LTI0agwIAhIIL20vMDZnbXJyBwgBEgNMSVNAAUgBcAGCAQsI____________AZgBAg&hl=en&gl=BR",
         "https://www.google.com/travel/flights/search?tfs=CBwQAhooEgoyMDI1LTA4LTI0agwIAhIIL20vMDZnbXJyDAgDEggvbS8wNTJwN0ABSAFwAYIBCwj___________8BmAEC&hl=en&gl=BR",
     ]
+
+    def __init__(self, *args, **kwargs):
+        super(FlightsSpider, self).__init__(*args, **kwargs)
+        self.db_handler = DBHandler()  # Initialize the database handler
+        self.db_handler.create_table()  # Create the table if it doesn't exist
 
     def start_requests(self):
         yield SeleniumRequest(
@@ -81,6 +87,17 @@ class FlightsSpider(scrapy.Spider):
                 "company": company,
                 "scraped_at": current_date,
             }
+
+            # Insert the data into the database
+            self.db_handler.insert_data(
+                duration=duration,
+                stops=stops,
+                price=price,
+                departure_landing=departure_landing,
+                stopping_locations=stopping_locations,
+                company=company,
+                scraped_at=current_date,
+            )
 
         # After finishing processing the first URL, check if there's another URL
         index = response.meta.get("index", 0)

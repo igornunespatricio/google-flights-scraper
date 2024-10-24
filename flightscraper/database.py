@@ -18,14 +18,14 @@ class DBHandler:
         )
         self.cursor = self.conn.cursor()
 
-    def create_table(self):
-        table_name = "googleFlights"
+        self.table_name = "RawGoogleFlights"
 
+    def create_table(self):
         # Query to check if the table already exists
         check_table_query = f"""
         SELECT COUNT(*) 
         FROM sysobjects 
-        WHERE name='{table_name}' AND xtype='U'
+        WHERE name='{self.table_name}' AND xtype='U'
         """
 
         # Execute the check
@@ -33,10 +33,10 @@ class DBHandler:
         result = self.cursor.fetchone()
 
         if result[0] > 0:
-            print(f"Table {table_name} already exists.")
+            print(f"Table {self.table_name} already exists.")
         else:
             create_table_query = f"""
-            CREATE TABLE {table_name} (
+            CREATE TABLE {self.table_name} (
                 id INT IDENTITY(1,1) PRIMARY KEY,
                 duration NVARCHAR(50),             
                 stops NVARCHAR(50),                
@@ -49,7 +49,7 @@ class DBHandler:
             """
             self.cursor.execute(create_table_query)
             self.conn.commit()
-            print(f"Successfully created table {table_name}.")
+            print(f"Successfully created table {self.table_name}.")
 
     def insert_data(
         self,
@@ -68,8 +68,8 @@ class DBHandler:
             ",".join(stopping_locations) if stopping_locations else None
         )
 
-        insert_query = """
-        INSERT INTO googleFlights (duration, stops, price, departure_landing, stopping_locations, company, scraped_at)
+        insert_query = f"""
+        INSERT INTO {self.table_name} (duration, stops, price, departure_landing, stopping_locations, company, scraped_at)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         try:
