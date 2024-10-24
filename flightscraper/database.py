@@ -18,8 +18,6 @@ class DBHandler:
         )
         self.cursor = self.conn.cursor()
 
-    # Create the flights table if it doesn't already exist
-
     def create_table(self):
         table_name = "googleFlights"
 
@@ -35,10 +33,8 @@ class DBHandler:
         result = self.cursor.fetchone()
 
         if result[0] > 0:
-            # Table exists, print a message
             print(f"Table {table_name} already exists.")
         else:
-            # Table does not exist, create it
             create_table_query = f"""
             CREATE TABLE {table_name} (
                 id INT IDENTITY(1,1) PRIMARY KEY,
@@ -55,7 +51,6 @@ class DBHandler:
             self.conn.commit()
             print(f"Successfully created table {table_name}.")
 
-    # Insert data into the flights table
     def insert_data(
         self,
         duration,
@@ -74,31 +69,32 @@ class DBHandler:
         )
 
         insert_query = """
-        INSERT INTO flights (duration, stops, price, departure_landing, stopping_locations, company, scraped_at)
+        INSERT INTO googleFlights (duration, stops, price, departure_landing, stopping_locations, company, scraped_at)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """
-        self.cursor.execute(
-            insert_query,
-            (
-                duration_str,
-                stops_str,
-                price_str,
-                departure_landing,
-                stopping_locations_str,
-                company,
-                scraped_at,
-            ),
-        )
-        self.conn.commit()
+        try:
+            self.cursor.execute(
+                insert_query,
+                (
+                    duration_str,
+                    stops_str,
+                    price_str,
+                    departure_landing,
+                    stopping_locations_str,
+                    company,
+                    scraped_at,
+                ),
+            )
+            self.conn.commit()
+        except pyodbc.Error as e:
+            print(f"Error inserting data: {e}")
 
-    # Close the connection when done
     def close_connection(self):
+        self.cursor.close()
         self.conn.close()
 
-    # Test connection to the database
     def test_connection(self):
         try:
-            # Test with a simple query (e.g., get current server date)
             self.cursor.execute("SELECT GETDATE()")
             result = self.cursor.fetchone()
             print(f"Connection successful. Server date/time: {result[0]}")
@@ -109,5 +105,6 @@ class DBHandler:
 # Example usage to test the connection
 if __name__ == "__main__":
     db = DBHandler()
+    db.test_connection()
     db.create_table()
     db.close_connection()
