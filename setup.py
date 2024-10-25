@@ -17,8 +17,28 @@ def activate_virtualenv():
     return activate_script
 
 
+def upgrade_pip():
+    # Step 3: Upgrade pip to the latest version
+    print("Upgrading pip...")
+    subprocess.run(
+        [f".venv\\Scripts\\python", "-m", "pip", "install", "--upgrade", "pip"],
+        shell=True,
+    )
+    print("pip upgraded successfully.")
+
+
+def install_package(package):
+    # Step 4: Install a single package and suppress the output
+    print(f"Installing {package}...")
+    subprocess.run(
+        [f".venv\\Scripts\\python", "-m", "pip", "install", package, "--quiet"],
+        shell=True,
+    )
+    print(f"{package} installed successfully.")
+
+
 def install_packages():
-    # Step 3: Install required packages with specific versions
+    # Step 5: Install required packages with specific versions
     packages = [
         "pyodbc==5.2.0",
         "python-dotenv==1.0.1",
@@ -26,11 +46,12 @@ def install_packages():
         "scrapy-selenium==0.0.7",
         "selenium==4.25.0",
     ]
-    subprocess.run([f".venv\\Scripts\\pip", "install"] + packages, shell=True)
+    for package in packages:
+        install_package(package)
 
 
 def replace_middleware():
-    # Step 4: Replace the scrapy-selenium middleware file
+    # Step 6: Replace the scrapy-selenium middleware file
     source_path = os.path.join("custom_scripts", "middlewares.py")
     dest_path = os.path.join(
         ".venv", "Lib", "site-packages", "scrapy_selenium", "middlewares.py"
@@ -49,5 +70,7 @@ if __name__ == "__main__":
     print(
         f"Run this to activate the virtual environment: \nsource {activate_virtualenv()}"
     )
+
+    upgrade_pip()
     install_packages()
     replace_middleware()
