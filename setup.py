@@ -33,7 +33,15 @@ def upgrade_pip():
     # Step 3: Upgrade pip to the latest version
     print("Upgrading pip...")
     subprocess.run(
-        [f".venv\\Scripts\\python", "-m", "pip", "install", "--upgrade", "pip"],
+        [
+            f".venv\\Scripts\\python",
+            "-m",
+            "pip",
+            "install",
+            "--upgrade",
+            "pip",
+            "--quiet",
+        ],
         shell=True,
     )
     print("pip upgraded successfully.")

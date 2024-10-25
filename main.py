@@ -6,7 +6,7 @@ import sys
 def activate_virtualenv():
     # Activate the virtual environment by using the correct Python path from .venv
     if os.name == "nt":  # If Windows
-        python_executable = os.path.join(".venv", "Scripts", "python.exe")
+        python_executable = os.path.join("..", ".venv", "Scripts", "python.exe")
     else:  # If Unix-based systems (Linux/Mac)
         python_executable = os.path.join(".venv", "bin", "python")
 
