@@ -14,15 +14,6 @@ def activate_virtualenv():
 
 
 if __name__ == "__main__":
-    # Step 1: Enter the google-flights-scraper folder
-    project_folder = "google-flights-scraper"
-    if os.path.exists(project_folder):
-        os.chdir(project_folder)
-        print(f"Changed directory to: {os.getcwd()}")
-    else:
-        print(f"Error: The folder '{project_folder}' does not exist.")
-        sys.exit(1)
-
     # Step 2: Enter the Scrapy project folder
     project_path = (
         "flightscraper"  # Change this to your actual Scrapy project folder name
