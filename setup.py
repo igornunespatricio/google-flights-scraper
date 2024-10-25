@@ -4,6 +4,18 @@ import os
 import sys
 
 
+def change_directory():
+    # Step 0: Enter the google-flights-scraper folder
+    project_folder = "google-flights-scraper"
+
+    if os.path.exists(project_folder):
+        os.chdir(project_folder)
+        print(f"Changed directory to: {os.getcwd()}")
+    else:
+        print(f"Error: The folder '{project_folder}' does not exist.")
+        sys.exit(1)
+
+
 def create_virtualenv():
     # Step 1: Create a virtual environment called .venv
     subprocess.run([sys.executable, "-m", "venv", ".venv"])
@@ -65,12 +77,12 @@ def replace_middleware():
 
 
 if __name__ == "__main__":
-    create_virtualenv()
-    # Activate the virtual environment (this will be for manual use)
+    change_directory()  # Enter the google-flights-scraper folder
+    create_virtualenv()  # Create the virtual environment
     print(
         f"Run this to activate the virtual environment: \nsource {activate_virtualenv()}"
     )
 
-    upgrade_pip()
-    install_packages()
-    replace_middleware()
+    upgrade_pip()  # Upgrade pip
+    install_packages()  # Install the required packages
+    replace_middleware()  # Replace the middleware file
