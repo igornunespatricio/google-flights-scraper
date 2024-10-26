@@ -99,3 +99,6 @@ FEED_EXPORT_ENCODING = "utf-8"
 DOWNLOADER_MIDDLEWARES = {"scrapy_selenium.SeleniumMiddleware": 800}  # Priority of 800
 SELENIUM_DRIVER_ARGUMENTS = []  # ["--headless=new"]
 SELENIUM_DRIVER_NAME = "chrome"
+
+# setting for logging information
+LOG_LEVEL = "WARNING"

@@ -38,15 +38,23 @@ class DBHandler:
             create_table_query = f"""
             CREATE TABLE {self.table_name} (
                 id INT IDENTITY(1,1) PRIMARY KEY,
-                duration NVARCHAR(50),             
-                stops NVARCHAR(50),                
-                price NVARCHAR(50),                
-                departure_landing NVARCHAR(50),   
-                stopping_locations NVARCHAR(50),  
-                company NVARCHAR(50),              
+                duration NVARCHAR(150),
+                number_stops NVARCHAR(150),
+                price NVARCHAR(150),
+                departure_landing_airports NVARCHAR(150),
+                departure_landing_cities NVARCHAR(150),
+                stopping_locations NVARCHAR(150),
+                company NVARCHAR(150),
+                ticket_type NVARCHAR(150),
+                number_passengers NVARCHAR(150),
+                flight_class NVARCHAR(150),
+                departure_date DATE,
+                return_date DATE,
+                departure_landing_times NVARCHAR(150),
                 scraped_at DATETIME
             )
-            """
+        """
+
             self.cursor.execute(create_table_query)
             self.conn.commit()
             print(f"Successfully created table {self.table_name}.")
@@ -54,34 +62,46 @@ class DBHandler:
     def insert_data(
         self,
         duration,
-        stops,
+        number_stops,
         price,
-        departure_landing,
+        departure_landing_airports,
+        departure_landing_cities,
         stopping_locations,
         company,
+        ticket_type,
+        number_passengers,
+        flight_class,
+        departure_date,
+        return_date,
+        departure_landing_times,
         scraped_at,
     ):
-        duration_str = ",".join(duration) if duration else None
-        stops_str = ",".join(stops) if stops else None
-        price_str = ",".join(price) if price else None
-        stopping_locations_str = (
-            ",".join(stopping_locations) if stopping_locations else None
-        )
-
         insert_query = f"""
-        INSERT INTO {self.table_name} (duration, stops, price, departure_landing, stopping_locations, company, scraped_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO {self.table_name} (
+            duration, number_stops, price, departure_landing_airports, 
+            departure_landing_cities, stopping_locations, company, 
+            ticket_type, number_passengers, flight_class, departure_date, 
+            return_date, departure_landing_times, scraped_at
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
         try:
             self.cursor.execute(
                 insert_query,
                 (
-                    duration_str,
-                    stops_str,
-                    price_str,
-                    departure_landing,
-                    stopping_locations_str,
+                    duration,
+                    number_stops,
+                    price,
+                    departure_landing_airports,
+                    departure_landing_cities,
+                    stopping_locations,
                     company,
+                    ticket_type,
+                    number_passengers,
+                    flight_class,
+                    departure_date,
+                    return_date,
+                    departure_landing_times,
                     scraped_at,
                 ),
             )
